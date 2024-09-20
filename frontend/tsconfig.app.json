@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
@@ -23,5 +24,13 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  
+    "baseUrl": "./",              // base directory for non-relative module imports
+    "paths": {
+      "@shared/*": ["../backend/src/shared/*"] // Set up path alias for shared types in the backend
+    },
+    "include": [
+    "src/**/*",                    // Include all frontend files
+    "../backend/src/shared/types.ts" // Explicitly include the types file from backend
+  ]
 }

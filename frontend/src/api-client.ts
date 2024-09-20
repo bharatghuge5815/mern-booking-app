@@ -1,5 +1,6 @@
 import { RegisterFormData } from "./pages/Register";
 import { SignInFormData } from "./pages/SignIn";
+import { HotelType } from "../../backend/src/shared/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -75,3 +76,23 @@ export const addMyHotel = async (hotelFormData: FormData) => {
 
   return response.json();
 };
+
+export const fetchMyHotels = async (): Promise<HotelType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/my-hotels`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text(); // Read response body as text
+    console.error("Error response:", errorText); // Log the raw response
+    throw new Error(`Error fetching hotels: ${response.status} ${response.statusText}`);
+  }
+
+  try {
+    return await response.json(); // Attempt to parse the response as JSON
+  } catch (error) {
+    throw new Error("Failed to parse response as JSON");
+  }
+};
+
+

@@ -16,8 +16,7 @@ const upload = multer({
       fileSize: 5 * 1024 * 1024, // 5MB
     },
   });
-
-
+  
 router.post(
     "/",
     verifyToken,
@@ -64,8 +63,41 @@ router.post(
             console.log(e);
             res.status(500).json({ message: "Something went wrong" });
           }
-        }
-    );
+});
+
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const hotels = await Hotel.find({ userId: req.userId });
+    res.json(hotels);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching hotels" });
+  }
+});
+
+
+// Corrected route definition
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+  try {
+    // Fetch the hotel for the user
+    const hotel = await Hotel.findOne({
+      userId: req.userId,
+    });
+
+    // If no hotel is found, return an empty array
+    if (!hotel) {
+      return res.json([]); // Frontend expects an array
+    }
+
+    // Return the hotel in an array to keep consistency
+    return res.json([hotel]);
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error fetching hotels:", error);
+
+    // Return a JSON error response
+    return res.status(500).json({ message: "Error fetching hotels" });
+  }
+});
 
   
 
